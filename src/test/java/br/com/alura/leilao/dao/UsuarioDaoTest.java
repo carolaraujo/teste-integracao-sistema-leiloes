@@ -47,7 +47,7 @@ class UsuarioDaoTest {
 	
 	@Test
 	void deveriaRemoverUsuario() {
-		Usuario usuario =criarUsuario();
+		Usuario usuario = criarUsuario();
 		dao.deletar(usuario);
 		Assert.assertThrows(NoResultException.class, ()->
 		this.dao.buscarPorUsername("fulano"));
