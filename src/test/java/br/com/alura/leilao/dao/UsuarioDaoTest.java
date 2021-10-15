@@ -3,6 +3,7 @@ package br.com.alura.leilao.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import br.com.alura.leilao.util.builder.UsuarioBuilder;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,15 +32,29 @@ class UsuarioDaoTest {
 	
 
 	@Test
-	void deveriaEncontrarUsuarioCadastrado() {	
-		Usuario usuario = criarUsuario();
+	void deveriaEncontrarUsuarioCadastrado() {
+		Usuario usuario = new UsuarioBuilder()
+				.comNome("Fulano")
+				.comEmail("fulano@email.com")
+				.comSenha("12345")
+				.criar();
+
+		em.persist(usuario);
+
 		Usuario encontrado = this.dao.buscarPorUsername(usuario.getNome());
 		Assert.assertNotNull(encontrado);
 	}
 	
 	@Test
-	void naoDeveriaEncontrarUusuarioNaoCadastrado() {	
-		criarUsuario();
+	void naoDeveriaEncontrarUusuarioNaoCadastrado() {
+		Usuario usuario = new UsuarioBuilder()
+				.comNome("Fulano")
+				.comEmail("fulano@email.com")
+				.comSenha("12345")
+				.criar();
+
+		em.persist(usuario);
+
 		Assert.assertThrows(NoResultException.class, ()->
 		this.dao.buscarPorUsername("beltrano"));
 	}
@@ -47,16 +62,18 @@ class UsuarioDaoTest {
 	
 	@Test
 	void deveriaRemoverUsuario() {
-		Usuario usuario = criarUsuario();
+		Usuario usuario = new UsuarioBuilder()
+				.comNome("Fulano")
+				.comEmail("fulano@email.com")
+				.comSenha("12345")
+				.criar();
+
+		em.persist(usuario);
+
 		dao.deletar(usuario);
 		Assert.assertThrows(NoResultException.class, ()->
 		this.dao.buscarPorUsername("fulano"));
 	}
-	
-	private Usuario criarUsuario() {
-		Usuario usuario = new Usuario("fulano", "ulano@email.com", "12345678");
-		em.persist(usuario);
-		return usuario;
-	}
+
 
 }
